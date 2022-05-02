@@ -107,7 +107,7 @@ local presets = {
             label = function(tabid)
                 return {
                     tab_label(tabid),
-                    hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
+                   hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
                 }
             end,
             left_sep = { '', hl = { fg = hl_tabline_sel.bg, bg = hl_tabline_fill.bg } },
@@ -342,3 +342,4 @@ vim.api.nvim_set_keymap("n", "tc", ":tabclose<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "to", ":tabonly<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "tn", ":tabn<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "tp", ":tabp<CR>", { noremap = true })
+ 

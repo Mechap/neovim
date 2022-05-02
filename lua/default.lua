@@ -50,7 +50,7 @@ vim.cmd([[colorscheme gruvbox]])
 
 vim.cmd([[highlight clear SignColumn]])
 
-vim.cmd([[set laststatus=0]])
+--vim.cmd([[set laststatus=0]])
 
 -- Telescope keymap
 vim.api.nvim_set_keymap("n", "fe", ":Telescope fd<CR>", { noremap = true })
@@ -61,4 +61,49 @@ vim.api.nvim_set_keymap("n", "fr", ":Telescope lsp_references<CR>", { noremap = 
 vim.api.nvim_set_keymap("n", "fs", ":Telescope lsp_dynamic_workspace_symbols<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "fg", ":Telescope git_status<CR>", { noremap = true })
 
+-- Latex compilation
+vim.api.nvim_set_keymap("n", "le", ":!zsh ./compile.sh<CR>", { noremap = true })
 
+vim.opt.list = true
+vim.opt.listchars:append("eol:↴")
+
+require("indent_blankline").setup {
+    -- for example, context is off by default, use this to turn it on
+    show_current_context = true,
+    --show_current_context_start = true,
+    show_end_of_line = true,
+    buftype_exclude = { "terminal" },
+    filetype_exclude = { "dashboard" },
+}
+
+vim.g.dashboard_custom_section = {
+   a = {
+      description = { "  Find File          " },
+      command = "Telescope find_files",
+   },
+   b = {
+      description = { "  New File           " },
+      command = ":ene!",
+   },
+   c = {
+      description = { "  Recent Projects    " },
+      command = "Telescope projects",
+   },
+   d = {
+      description = { "  Recently Used Files" },
+      command = "Telescope oldfiles",
+   },
+}
+vim.g.dashboard_custom_footer = {"to the stars!!!1!"}
+vim.g.dashboard_default_executive = "telescope"
+vim.g.dashboard_executive = "telescope"
+vim.g.dashboard_preview_command = 'chafa -c 256 --fg-only --symbols braille'
+vim.g.dashboard_preview_file = '~/.config/nvim/LAINHADN3.gif'
+vim.g.dashboard_preview_file_height = 23
+vim.g.dashboard_preview_file_width = 28
+
+vim.cmd([[hi PmenuSbar guibg=none]])
+vim.cmd([[hi PmenuThumb guibg=none]])
+
+require'nvim-tree'.setup {
+}

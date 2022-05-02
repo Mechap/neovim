@@ -40,7 +40,8 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
   buf_set_keymap('n', 'K', '<Cmd>Lspsaga hover_doc<CR>', opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  -- buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  buf_set_keymap('n', '<C-k>', '<cmd>Lspsaga signature_help<CR>', opts)
   buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_worksace_folder()<CR>', opts)
   buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
@@ -67,7 +68,7 @@ local on_attach = function(client, bufnr)
     vim.api.nvim_exec([[
       hi LspReferenceRead cterm=bold ctermbg=red guibg=LightYellow
       hi LspReferenceText cterm=bold ctermbg=red guibg=LightYellow
-      hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightYellow
+      hi LspRefrenceWrite cterm=bold ctermbg=red guibg=LightYellow
       augroup lsp_document_highlight
         autocmd! * <buffer>
         autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
@@ -100,6 +101,64 @@ require'lspconfig'.pyright.setup{}
 -- Rust setup
 require('rust-tools').setup({})
 
+require('clangd_extensions').setup {
+    server = {
+        -- options to pass to nvim-lspconfig
+        -- i.e. the arguments to require("lspconfig").clangd.setup({})
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = {"clangd", "--background-index", "-header-insertion=never"}
+    },
+    extensions = {
+	autoSetHints = true,
+	hover_with_actions = true,
+	inlay_hints = {
+	    only_current_line = false,
+	    only_current_line_autocmd = "CursorHold",
+	    show_parameter_hints = true,
+	    show_parameter_hints_prefix = "<-",
+	    other_hints_prefix = "=>",
+	    max_len_align = false,
+	    max_len_align_padding = 1,
+	    right_align = false,
+	    right_align_padding = 7,
+	    highlight = "Comment",
+	    priority = 100,
+	},
+    },
+            ast = {
+            role_icons = {
+                type = "",
+                declaration = "",
+                expression = "",
+                specifier = "",
+                statement = "",
+                ["template argument"] = "",
+            },
+
+            kind_icons = {
+                Compound = "",
+                Recovery = "",
+                TranslationUnit = "",
+                PackExpansion = "",
+                TemplateTypeParm = "",
+                TemplateTemplateParm = "",
+                TemplateParamObject = "",
+            },
+
+            highlights = {
+                detail = "Comment",
+            },
+        memory_usage = {
+            border = "none",
+        },
+        symbol_info = {
+            border = "none",
+        },
+    },
+}
+
+--[[
 require("clangd_extensions").setup {
     server = {
         -- options to pass to nvim-lspconfig
@@ -146,9 +205,10 @@ require("clangd_extensions").setup {
         },
     }
 }
+]]
 
-local luadev = require('lua-dev').setup({})
-lspconfig.sumneko_lua.setup(luadev)
+--local luadev = require('lua-dev').setup({})
+--lspconfig.sumneko_lua.setup(luadev)
 
 -- luasnip setup
 local luasnip = require 'luasnip'
@@ -210,7 +270,64 @@ spippet = {
 
 local cmp = require'cmp'
 
+local kind_icons = {
+    Text = "",
+    Method = "",
+    Function = "",
+    Constructor = "",
+    Field = "",
+    Variable = "",
+    Class = "ﴯ",
+    Interface = "",
+    Module = "",
+    Property = "ﰠ",
+    Unit = "",
+    Value = "",
+    Enum = "",
+    Keyword = "",
+    Snippet = "",
+    Color = "",
+    File = "",
+    Reference = "",
+    Folder = "",
+    EnumMember = "",
+    Constant = "",
+    Struct = "",
+    Event = "",
+    Operator = "",
+    TypeParameter = ""
+}
+
+local cmp_window = require('cmp.utils.window')
+function cmp_window:has_scrollbar()
+  return false
+end
+
 cmp.setup({
+    window = {
+	documentation = {
+	    border = {'╭', '─', '╮', '│', '╯', '─', '╰', '│'},
+	    winhighlight = 'Normal:CmpPmenu,FloatBorder:CmpPmenuBorder,CursorLine:PmenuSel,Search:None',
+	},
+	completion = {
+	    scrollbar = '|',
+	    border = {'╭', '─', '╮', '│', '╯', '─', '╰', '│'},
+	    -- border = {'┌', '─', '┐', '│', '┘', '─', '└', '│'},
+	    winhighlight = 'Normal:CmpPmenu,FloatBorder:CmpPmenuBorder,CursorLine:PmenuSel,Search:None',
+	}
+    },
+    formatting = {
+	format = lspkind.cmp_format({
+	    mode = "symbol_text",
+	    menu = ({
+		buffer = "[Buffer]",
+		nvim_lsp = "[LSP]",
+		luasnip = "[LuaSnip]",
+		nvim_lua = "[Lua]",
+		latex_symbols = "[Latex]",
+	    })
+	}),
+    },
     snippet = {
         -- REQUIRED - you must specify a snippet engine
         expand = function(args)
@@ -220,57 +337,23 @@ cmp.setup({
             -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
         end,
     },
-    mapping = {
-        --[[
-        ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
-        ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
-        ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
-        ['<C-y>'] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
-        ['<C-e>'] = cmp.mapping({
-            i = cmp.mapping.abort(),
-            c = cmp.mapping.close(),
-        }),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-        ]]
-
-        ['<C-p>'] = cmp.mapping.select_prev_item(),
-        ['<C-n>'] = cmp.mapping.select_next_item(),
-        ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-e>'] = cmp.mapping.close(),
-        ['<CR>'] = cmp.mapping.confirm {
-            behavior = cmp.ConfirmBehavior.Replace,
-            select = true,
-        },
-        ['<Tab>'] = function(fallback)
-            if cmp.visible() then
-                cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
-            else
-                fallback()
-            end
-        end,
-        ['<S-Tab>'] = function(fallback)
-            if cmp.visible() then
-                cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-                luasnip.jump(-1)
-            else
-                fallback()
-            end
-        end,
-    },
+    mapping = cmp.mapping.preset.insert({
+	['<C-b>'] = cmp.mapping.scroll_docs(-4),
+	['<C-f>'] = cmp.mapping.scroll_docs(4),
+	['<C-Space>'] = cmp.mapping.complete(),
+	['<C-e>'] = cmp.mapping.abort(),
+	['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    }),
     sources = cmp.config.sources({
+	{ name = 'latex_symbolx' },
         { name = 'nvim_lsp' },
         -- { name = 'vsnip' }, -- For vsnip users.
-        -- { name = 'luasnip' }, -- For luasnip users.
-        { name = 'ultisnips' }, -- For ultisnips users.
+        { name = 'luasnip' }, -- For luasnip users.
+        -- { name = 'ultisnips' }, -- For ultisnips users.
         -- { name = 'snippy' }, -- For snippy users.
     }, {
         { name = 'buffer' },
-    })
+    }),
 })
 
 vim.cmd([[hi! link DiagnosticSignWarn GruvboxYellow]])
