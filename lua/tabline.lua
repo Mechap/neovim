@@ -83,7 +83,7 @@ local presets = {
         },
         tail = {
             { '', hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
-            { '  ', hl = { fg = hl_tabline.fg, bg = hl_tabline.bg } },
+            { '   ', hl = { fg = hl_tabline.fg, bg = hl_tabline.bg } },
         },
     },
     active_wins_at_end = {
@@ -267,6 +267,7 @@ require("tabby").setup({
 
 --vim.cmd([[hi! link TabLineFill GruvboxYellow]])
 
+--[[
 local palette = {
     accent = '#83a598', -- blue
     accent_sec = '#a89984', -- fg4
@@ -275,6 +276,7 @@ local palette = {
     fg = '#d5c4a1', -- fg2
     fg_sec = '#bdae93', -- fg3
 }
+]]
 
 local filename = require('tabby.filename')
 local cwd = function()
@@ -283,6 +285,8 @@ end
 local tabname = function(tabid)
     return vim.api.nvim_tabpage_get_number(tabid)
 end
+
+--[[
 local line = {
     hl = { fg = palette.fg, bg = palette.bg },
     layout = 'active_wins_at_tail',
@@ -332,14 +336,115 @@ local line = {
     },
     tail = {
         { '', hl = { fg = palette.accent_sec, bg = palette.bg } },
-        { '  ', hl = { fg = palette.bg, bg = palette.accent_sec } },
+        { '   ', hl = { fg = palette.bg, bg = palette.accent_sec } },
     },
 }
+]]
+
+local util = require('tabby.util')
+
+local palette = {
+    accent = '#83a598', -- blue
+    accent_sec = '#a89984', -- fg4
+    bg = util.extract_nvim_hl('GruvboxFg0').bg, -- bg1
+    bg_sec = '#504945', -- bg2
+    fg = '#d5c4a1', -- fg2
+    fg_sec = '#bdae93', -- fg3
+    yellow = '#fabd2f',
+}
+
+local line = {
+    hl = { fg = palette.fg, bg = palette.bg },
+    layout = 'active_wins_at_tail',
+    head = {
+        { '  ', hl = { fg = palette.fg, bg = palette.bg } },
+        { cwd, hl = { fg = palette.fg, bg = palette.bg } },
+    },
+    active_tab = {
+        label = function(tabid)
+            return {
+                '  ' .. tabname(tabid) .. ' ',
+                hl = { fg = palette.fg, bg = palette.bg, style = 'bold' },
+            }
+        end,
+    },
+    inactive_tab = {
+        label = function(tabid)
+            return {
+                '  ' .. tabname(tabid) .. ' ',
+                hl = { fg = palette.fg, bg = palette.bg, style = 'bold' },
+            }
+        end,
+    },
+    top_win = {
+        label = function(winid)
+            return {
+                '  ' .. filename.unique(winid) .. ' ',
+                hl = { fg = palette.fg, bg = palette.bg },
+            }
+        end,
+    },
+    win = {
+        label = function(winid)
+            return {
+                '  ' .. filename.unique(winid) .. ' ',
+                hl = { fg = palette.fg, bg = palette.bg },
+            }
+        end,
+    },
+    tail = {
+        { ' * ', hl = { fg = palette.bg, bg = palette.bg } },
+    },
+}
+
 require('tabby').setup({ tabline = line })
 
-vim.api.nvim_set_keymap("n", "ta", ":$tabnew<CR>", { noremap = true })
+-- 
+
+--[[
+local numbers = { '', '', '', '', '', '', '', '', '' }
+
+-- Tabby is configured to only show tabs and not buffer in the statusline
+local function render_function(line)
+    return {
+        line.tabs().foreach(function(tab)
+            local hl = tab.is_current() and 'TabbyTabCurrent' or 'TabbyTab'
+            return {
+                -- First argument is the separator itself, second and third
+                -- arguments are highlight groups or tables in the form:
+                -- { fg = '#00FF00', bg = '#0000FF' }. Tabby extraxty ONLY the
+                -- bg color from these highlight groups!! The bg color from the
+                -- second argument is for the fg, and from the third argument
+                -- for the background. Ugly API design ..
+                line.sep('', hl, 'TabbyBackground'),
+                ' ',
+                numbers[tab.number()],
+                ' ',
+                tab.name(),
+                tab.close_btn(' '),
+                ' ',
+                line.sep('', hl, 'TabbyBackground'),
+                line.sep(' ', {}, 'TabbyBackground'),
+                hl = hl,
+            }
+        end),
+        line.spacer(),
+    }
+end
+
+local opt = {
+    tab_name = {
+        name_fallback = function()
+            return 'Tab'
+        end,
+    },
+}
+]]
+
+--require('tabby.tabline').set(render_function, opt)
+
+vim.api.nvim_set_keymap("n", "ta", ":tabnew<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "tc", ":tabclose<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "to", ":tabonly<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "tn", ":tabn<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "tp", ":tabp<CR>", { noremap = true })
- 

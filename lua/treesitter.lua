@@ -1,4 +1,4 @@
-require'nvim-treesitter.configs'.setup {
+require 'nvim-treesitter.configs'.setup {
     -- One of "all", "maintained" (parsers with maintainers), or a list of languages
     ensure_installed = "all",
 
@@ -9,14 +9,31 @@ require'nvim-treesitter.configs'.setup {
     ignore_install = { "javascript" },
 
     highlight = {
-        -- `false` will disable the whole extension
         enable = true,
-
-        -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-        -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-        -- Using this option may slow down your editor, and you may see some duplicate highlights.
-        -- Instead of true it can also be a list of languages
-        additional_vim_regex_highlighting = false,
+        additional_vim_regex_highlighting = true,
     },
+    ident = {
+        enable = true
+    }
 }
+-- latex
+vim.cmd [[ hi! link @text.environment GruvboxAqua ]]
+vim.cmd [[ hi! link @text.environment.name GruvboxYellow ]]
+vim.cmd [[ hi! link @namespace GruvboxPurpleBold ]]
+vim.cmd [[ hi! link @text.math GruvboxOrange ]]
+vim.cmd [[ hi! link @attribute GruvboxOrange ]]
+vim.cmd [[ hi! link @variable GruvboxFg0 ]]
+vim.cmd [[ hi! link @type.qualifier GruvboxRed ]]
+vim.cmd [[ hi! link @type.builtin GruvboxRed ]]
+vim.cmd [[ hi! link @type GruvboxYellow ]]
+vim.cmd [[ hi! link texOnlyMath GruvboxFg0 ]]
 
+
+--[[
+require('spellsitter').setup({
+    enable = false,
+})
+]]
+
+-- vim.cmd [[ set spelllang=fr ]]
+vim.o.spell = false

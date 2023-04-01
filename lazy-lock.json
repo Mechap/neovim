@@ -1,0 +1,18 @@
+{
+  "SmoothCursor.nvim": { "branch": "main", "commit": "a05a65981754c3202c7cad2e3304969ed188d161" },
+  "cmp-latex-symbols": { "branch": "main", "commit": "1ec2e4f47cde6c7ffcebec92cfec58ddc1f6689a" },
+  "cmp-nvim-lsp": { "branch": "main", "commit": "59224771f91b86d1de12570b4070fe4ad7cd1eeb" },
+  "cmp_luasnip": { "branch": "master", "commit": "18095520391186d634a0045dacaa346291096566" },
+  "dashboard-nvim": { "branch": "master", "commit": "e517188dab55493fb9034b4d4f1a508ccacfcd45" },
+  "friendly-snippets.nvim": { "branch": "main", "commit": "4ef45d099453a26d23084a04ae7dced19e6d5ae5" },
+  "gruvbox.nvim": { "branch": "main", "commit": "e863942494d7c72a7c8d2c54cf651f28fc5a76ab" },
+  "leap.nvim": { "branch": "main", "commit": "a968ab4250840dc879e805f918b4f3b892310a12" },
+  "lsp-format.nvim": { "branch": "master", "commit": "ca0df5c8544e51517209ea7b86ecc522c98d4f0a" },
+  "lspkind-nvim": { "branch": "master", "commit": "c68b3a003483cf382428a43035079f78474cd11e" },
+  "neodev.nvim": { "branch": "main", "commit": "258b83f48405c6b530c09dd96950693664dc6bc0" },
+  "neoscroll.nvim": { "branch": "master", "commit": "54c5c419f6ee2b35557b3a6a7d631724234ba97a" },
+  "nvim-cmp": { "branch": "main", "commit": "11a95792a5be0f5a40bab5fc5b670e5b1399a939" },
+  "nvim-lspconfig": { "branch": "master", "commit": "41dc4e017395d73af0333705447e858b7db1f75e" },
+  "nvim-treesitter": { "branch": "master", "commit": "5b8a152c6c9de4004725c20b891658e698430c70" },
+  "playground": { "branch": "master", "commit": "8a887bcf66017bd775a0fb19c9d8b7a4d6759c48" }
+}
