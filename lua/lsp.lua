@@ -18,6 +18,9 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
 vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
+
+local navic = require("nvim-navic")
+
 local on_attach = function(client, bufnr)
     local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
 
@@ -72,6 +75,10 @@ local on_attach = function(client, bufnr)
   end]]
     --require 'lsp_signature'.setup()
     require("lsp-format").on_attach(client)
+
+    if client.server_capabilities.documentSymbolProvider then
+        navic.attach(client, bufnr)
+    end
 end
 
 -- Latex lsp
@@ -147,7 +154,7 @@ require('clangd_extensions').setup {
             expression = "",
             specifier = "",
             statement = "",
-                ["template argument"] = "",
+            ["template argument"] = "",
         },
         kind_icons = {
             Compound = "",
@@ -365,14 +372,16 @@ end
 cmp.setup({
     window = {
         documentation = {
-            border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
+            --border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
+            border = { '┌', '─', '┐', '│', '┘', '─', '└', '│' },
             winhighlight = 'Normal:CmpPmenu,FloatBorder:CmpPmenuBorder,CursorLine:PmenuSel,Search:None',
         },
         completion = {
             scrollbar = '|',
-            border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
-            -- border = {'┌', '─', '┐', '│', '┘', '─', '└', '│'},
+            --border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
+            border = { '┌', '─', '┐', '│', '┘', '─', '└', '│' },
             winhighlight = 'Normal:CmpPmenu,FloatBorder:CmpPmenuBorder,CursorLine:PmenuSel,Search:None',
+            scrollbar = false,
         }
     },
     experimental = {
@@ -405,12 +414,12 @@ cmp.setup({
         end,
     },
     mapping = cmp.mapping.preset.insert({
-            ['<CR>'] = cmp.mapping.confirm({
+        ['<CR>'] = cmp.mapping.confirm({
             select = true,
             behavior = cmp.ConfirmBehavior.Replace,
         }),
-            ['<C-Space>'] = cmp.mapping.complete(),
-            ["<Tab>"] = cmp.mapping(function(fallback)
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
             elseif luasnip.expand_or_jumpable() then
@@ -421,7 +430,7 @@ cmp.setup({
                 fallback()
             end
         end, { "i", "s" }),
-            ["<S-Tab>"] = cmp.mapping(function(fallback)
+        ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_prev_item()
             elseif luasnip.jumpable(-1) then
@@ -430,13 +439,13 @@ cmp.setup({
                 fallback()
             end
         end, { "i", "s" }),
-            ['<C-k>'] = cmp.mapping.scroll_docs(-4),
-            ['<C-j>'] = cmp.mapping.scroll_docs(4),
-            ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-            ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+        ['<C-k>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-j>'] = cmp.mapping.scroll_docs(4),
+        ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+        ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
     }),
     sources = cmp.config.sources({
-        { name = 'latex_symbolx' },
+        -- { name = 'latex_symbolx' },
         { name = 'nvim_lsp' },
         { name = 'luasnip' }, -- For luasnip users.
         -- { name = 'vsnip' }, -- For vsnip users.
@@ -445,6 +454,27 @@ cmp.setup({
     }, {
         { name = 'buffer' },
     }),
+})
+
+cmp.setup.cmdline('/', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+        { name = 'buffer' }
+    }
+})
+
+cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+        { name = 'path' }
+    }, {
+        {
+            name = 'cmdline',
+            options = {
+                ignore_cmds = { 'Man', '!' }
+            }
+        }
+    })
 })
 
 --vim.cmd([[ autocmd InsertLeave * lua if require("luasnip").session.current_nodes[vim.api.nvim_get_current_buf()] then require("luasnip").unlink_current() end ]])

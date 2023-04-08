@@ -29,10 +29,10 @@ require('lualine').setup {
   extensions = {}
 }
 ]]
-
 -- Lua
 
 -- Customized config
+--[[
 require("nvim-gps").setup({
 
     disable_icons = false, -- Setting it to true will disable all icons
@@ -144,10 +144,10 @@ require("nvim-gps").setup({
     -- indicator used when context hits depth limit
     depth_limit_indicator = ".."
 })
-
+]]
 local lsp = require('feline.providers.lsp')
 local vi_mode_utils = require('feline.providers.vi_mode')
-local gps = require("nvim-gps")
+--local gps = require("nvim-gps")
 
 local force_inactive = {
     filetypes = {},
@@ -293,6 +293,7 @@ components.active[1][3] = {
     }
 }
 -- nvimGps
+--[[
 components.active[1][4] = {
     provider = function() return gps.get_location() end,
     enabled = function() return gps.is_available() end,
@@ -302,8 +303,19 @@ components.active[1][4] = {
         style = 'bold'
     }
 }
-
+]]
 -- MID
+
+local navic = require('nvim-navic')
+
+components.active[1][4] = {
+    provider = function()
+        return navic.get_location()
+    end,
+    enabled = function()
+        return navic.is_available()
+    end
+}
 
 -- gitBranch
 components.active[2][1] = {
@@ -545,3 +557,4 @@ require('feline').setup({
     components = components,
     force_inactive = force_inactive,
 })
+

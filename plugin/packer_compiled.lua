@@ -95,10 +95,10 @@ _G.packer_plugins = {
     path = "/home/mechap/.local/share/nvim/site/pack/packer/start/clangd_extensions.nvim",
     url = "https://github.com/p00f/clangd_extensions.nvim"
   },
-  ["cmp-latex-symbols"] = {
+  ["cmp-cmdline"] = {
     loaded = true,
-    path = "/home/mechap/.local/share/nvim/site/pack/packer/start/cmp-latex-symbols",
-    url = "https://github.com/kdheepak/cmp-latex-symbols"
+    path = "/home/mechap/.local/share/nvim/site/pack/packer/start/cmp-cmdline",
+    url = "https://github.com/hrsh7th/cmp-cmdline"
   },
   ["cmp-nvim-lsp"] = {
     loaded = true,
@@ -114,11 +114,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/mechap/.local/share/nvim/site/pack/packer/start/feline.nvim",
     url = "https://github.com/feline-nvim/feline.nvim"
-  },
-  ["friendly-snippets.nvim"] = {
-    loaded = true,
-    path = "/home/mechap/.local/share/nvim/site/pack/packer/start/friendly-snippets.nvim",
-    url = "https://github.com/sar/friendly-snippets.nvim"
   },
   ["gitsigns.nvim"] = {
     loaded = true,
@@ -175,15 +170,15 @@ _G.packer_plugins = {
     path = "/home/mechap/.local/share/nvim/site/pack/packer/start/nvim-cmp",
     url = "https://github.com/hrsh7th/nvim-cmp"
   },
-  ["nvim-gps"] = {
-    loaded = true,
-    path = "/home/mechap/.local/share/nvim/site/pack/packer/start/nvim-gps",
-    url = "https://github.com/SmiteshP/nvim-gps"
-  },
   ["nvim-lspconfig"] = {
     loaded = true,
     path = "/home/mechap/.local/share/nvim/site/pack/packer/start/nvim-lspconfig",
     url = "https://github.com/neovim/nvim-lspconfig"
+  },
+  ["nvim-navic"] = {
+    loaded = true,
+    path = "/home/mechap/.local/share/nvim/site/pack/packer/start/nvim-navic",
+    url = "https://github.com/SmiteshP/nvim-navic"
   },
   ["nvim-treesitter"] = {
     loaded = true,
@@ -234,11 +229,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/mechap/.local/share/nvim/site/pack/packer/start/telescope.nvim",
     url = "https://github.com/nvim-telescope/telescope.nvim"
-  },
-  ["vim-autoformat"] = {
-    loaded = true,
-    path = "/home/mechap/.local/share/nvim/site/pack/packer/start/vim-autoformat",
-    url = "https://github.com/vim-autoformat/vim-autoformat"
   }
 }
 

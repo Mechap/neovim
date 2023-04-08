@@ -18,6 +18,11 @@ return require('packer').startup(function()
 
     use "ggandor/leap.nvim"
 
+    use {
+        "SmiteshP/nvim-navic",
+        requires = "neovim/nvim-lspconfig"
+    }
+
     -- Best Theme
     use { "ellisonleao/gruvbox.nvim" }
 
@@ -30,16 +35,17 @@ return require('packer').startup(function()
 
     -- LSP utils
     use 'neovim/nvim-lspconfig'
-    use 'hrsh7th/nvim-cmp'           -- Autocompletion plugin
-    use 'hrsh7th/cmp-nvim-lsp'       -- LSP source for nvim-cmp
-    use 'kdheepak/cmp-latex-symbols' -- Latex symbols for nvim-cmp
-    use 'saadparwaiz1/cmp_luasnip'   -- Snippets source for nvim-cmp
-    use 'L3MON4D3/LuaSnip'           -- Snippets plugin
-    use 'onsails/lspkind-nvim'       -- completion items
+    use 'hrsh7th/nvim-cmp'         -- Autocompletion plugin
+    use 'hrsh7th/cmp-cmdline'
+    use 'hrsh7th/cmp-nvim-lsp'     -- LSP source for nvim-cmp
+    -- use 'kdheepak/cmp-latex-symbols' -- Latex symbols for nvim-cmp
+    use 'saadparwaiz1/cmp_luasnip' -- Snippets source for nvim-cmp
+    use 'L3MON4D3/LuaSnip'         -- Snippets plugin
+    use 'onsails/lspkind-nvim'     -- completion items
     use "lukas-reineke/lsp-format.nvim"
-    use "sar/friendly-snippets.nvim"
+    -- use "sar/friendly-snippets.nvim"
 
-    use 'vim-autoformat/vim-autoformat'
+    -- use 'vim-autoformat/vim-autoformat'
 
     use "karb94/neoscroll.nvim"
 
@@ -71,7 +77,7 @@ return require('packer').startup(function()
 
     use "nanozuki/tabby.nvim"
     use "feline-nvim/feline.nvim"
-    use "SmiteshP/nvim-gps"
+    --use "SmiteshP/nvim-gps"
 
     --use { 'is0n/fm-nvim' }
 end)

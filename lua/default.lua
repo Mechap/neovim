@@ -30,7 +30,7 @@ local options = {
     relativenumber = false,                  -- set relative numbered lines
     numberwidth = 2,                         -- set number column width to 2 {default 4}
     signcolumn = "yes",                      -- always show the sign column, otherwise it would shift the text each time
-    wrap = true,                             -- display lines as one long line
+    wrap = false,                            -- display lines as one long line
     linebreak = true,                        -- display lines as one long line
     scrolloff = 8,                           -- is one of my fav
     sidescrolloff = 8,
@@ -48,7 +48,7 @@ vim.cmd "set whichwrap+=<,>,[,],h,l"
 vim.opt.termguicolors = true
 vim.o.background = "dark" -- or "light" for light mode
 
---vim.o.laststatus = 0
+vim.o.laststatus = 3
 
 --vim.cmd([[ set laststatus = 0 ]])
 --vim.cmd([[ set tabline=0 ]])
@@ -563,6 +563,8 @@ require('neoscroll').setup({
     performance_mode = true,     -- Disable "Performance Mode" on all buffers.
 })
 
+require('gitsigns').setup()
+
 require("smoothcursor").setup {
     autostart = true,
     cursor = "",          -- cursor shape (need nerd font)
@@ -670,5 +672,5 @@ broot_conf = vim.fn.stdpath("data") .. "/site/pack/packer/start/fm-nvim/assets/b
 }
 ]]
 --vim.cmd([[ au BufWrite * :Autoformat ]])
-vim.cmd([[ let g:formatdef_latexindent = '"latexindent -m -l localSettings.yaml -"' ]])
+--vim.cmd([[ let g:formatdef_latexindent = '"latexindent -m -l localSettings.yaml -"' ]])
 --vim.cmd([[ autocmd FileType vim,tex let b:autoformat_autoindent=0 ]])
