@@ -82,14 +82,21 @@ vim.cmd([[highlight clear SignColumn]])
 
 vim.cmd([[hi! link VertSplit GruvboxFg0]])
 
+vim.cmd [[ hi! link HlSearchLens GruvboxPurple ]]
+vim.cmd [[ hi! link HlSearchLensNear GruvboxYellow ]]
+
 --vim.cmd([[set laststatus=0]])
 
 -- Telescope keymap
-vim.api.nvim_set_keymap("n", "fe", ":Telescope file_browser<CR>", { noremap = true })
+--vim.api.nvim_set_keymap("n", "fe", ":Telescope file_browser<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "fe", ":RnvimrToggle<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "fv", ":Telescope find_files<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "fb", ":Telescope live_grep<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "ft", ":Telescope treesitter<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "fd", ":Telescope lsp_document_symbols<CR>", { noremap = true })
+
+--vim.api.nvim_set_keymap("n", "fd", ":Telescope lsp_document_symbols<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "fd", ":Navbuddy<CR>", { noremap = true })
+
 vim.api.nvim_set_keymap("n", "fr", ":Telescope lsp_references<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "fs", ":Telescope lsp_dynamic_workspace_symbols<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "fg", ":Telescope git_status<CR>", { noremap = true })
@@ -97,17 +104,19 @@ vim.api.nvim_set_keymap("n", "fg", ":Telescope git_status<CR>", { noremap = true
 -- Latex compilation
 -- vim.api.nvim_set_keymap("n", "le", ":!make<CR>", { noremap = true })
 
-vim.opt.list = true
-vim.opt.listchars:append("eol:↴")
+--vim.opt.list = true
+--vim.opt.listchars:append("eol:↴")
 
+--[[
 require("indent_blankline").setup {
     -- for example, context is off by default, use this to turn it on
     show_current_context = true,
     show_current_context_start = false,
     show_end_of_line = true,
     buftype_exclude = { "terminal", "mini" },
-    filetype_exclude = { "dashboard", "packer", "mini", "alpha", "haskell" },
+    filetype_exclude = { "dashboard", "packer", "mini", "alpha", "haskell", "ocaml", "agda" },
 }
+]]
 
 vim.cmd([[ hi! link IndentBlanklineContextChar GruvboxFg0 ]])
 
@@ -127,34 +136,6 @@ map(
     { silent = true, expr = true }
 )
 
-
---[[
-vim.g.dashboard_custom_section = {
-a = {
-description = { "  Find File          " },
-command = "Telescope find_files",
-},
-b = {
-description = { "  New File           " },
-command = ":ene!",
-},
-c = {
-description = { "  Recent Projects    " },
-command = "Telescope projects",
-},
-d = {
-description = { "  Recently Used Files" },
-command = "Telescope oldfiles",
-},
-}
-vim.g.dashboard_custom_footer = {"to the stars!!!1!"}
-vim.g.dashboard_default_executive = "telescope"
-vim.g.dashboard_executive = "telescope"
---vim.g.dashboard_preview_command = 'chafa -c 256 --fg-only --symbols braille'
---vim.g.dashboard_preview_file = './LAINHADN3.gif'
-vim.g.dashboard_preview_file_height = 23
-vim.g.dashboard_preview_file_width = 28
-]]
 vim.cmd([[hi PmenuSbar guibg=none]])
 vim.cmd([[hi PmenuThumb guibg=none]])
 
@@ -199,6 +180,10 @@ require('telescope').setup {
             theme = "ivy",
         },
         lsp_document_symbols = {
+            theme = "ivy",
+        },
+
+        lsp_dynamic_workspace_symbols = {
             theme = "ivy",
         },
         live_grep = {
@@ -458,7 +443,7 @@ require('noice').setup({
     },
     lsp = {
         progress = {
-            enabled = false,
+            enabled = true,
         },
         override = {
             -- override the default lsp markdown formatter with Noice
@@ -572,7 +557,7 @@ require("smoothcursor").setup {
     linehl = nil,            -- highlight sub-cursor line like 'cursorline', "CursorLine" recommended
     type = "default",        -- define cursor movement calculate function, "default" or "exp" (exponential).
     fancy = {
-        enable = false,      -- enable fancy mode
+        enable = true,      -- enable fancy mode
         head = { cursor = "", texthl = "SmoothCursor", linehl = nil },
         body = {
             { cursor = "", texthl = "GruvboxRed" },
@@ -594,83 +579,36 @@ require("smoothcursor").setup {
     disabled_filetypes = nil, -- this option will be skipped if enabled_filetypes is set. example: { "TelescopePrompt", "NvimTree" }
 }
 
---[[
-require('fm-nvim').setup {
--- (Vim) Command used to open files
-edit_cmd = "edit",
+require('hlslens').setup()
 
--- See `Q&A` for more info
-on_close = {},
-on_open = {},
+local kopts = { noremap = true, silent = true }
 
--- UI Options
-ui = {
--- Default UI (can be "split" or "float")
-default = "float",
+vim.api.nvim_set_keymap('n', 'n',
+    [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]],
+    kopts)
+vim.api.nvim_set_keymap('n', 'N',
+    [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]],
+    kopts)
+vim.api.nvim_set_keymap('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]], kopts)
+vim.api.nvim_set_keymap('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]], kopts)
+vim.api.nvim_set_keymap('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]], kopts)
+vim.api.nvim_set_keymap('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]], kopts)
 
-float = {
--- Floating window border (see ':h nvim_open_win')
-border = "none",
+vim.api.nvim_set_keymap('n', '<Leader>l', '<Cmd>noh<CR>', kopts)
 
--- Highlight group for floating window/border (see ':h winhl')
-float_hl  = "Normal",
-border_hl = "FloatBorder",
-
--- Floating Window Transparency (see ':h winblend')
-blend = 0,
-
--- Num from 0 - 1 for measurements
-height = 0.8,
-width  = 0.8,
-
--- X and Y Axis of Window
-x = 0.5,
-y = 0.5
-},
-
-split = {
--- Direction of split
-direction = "topleft",
-
--- Size of split
-size = 24
+require('nvim-cursorline').setup {
+    cursorline = {
+        enable = false,
+        timeout = 1000,
+        number = false,
+    },
+    cursorword = {
+        enable = true,
+        min_length = 3,
+        hl = { underline = true },
+    }
 }
-},
 
--- Terminal commands used w/ file manager (have to be in your $PATH)
-cmds = {
-lf_cmd          = "lf", -- eg: lf_cmd = "lf -command 'set hidden'"
-fm_cmd          = "fm",
-nnn_cmd         = "nnn",
-fff_cmd         = "fff",
-twf_cmd         = "twf",
-fzf_cmd         = "fzf", -- eg: fzf_cmd = "fzf --preview 'bat --style=numbers --color=always --line-range :500 {}'"
-fzy_cmd         = "find . | fzy",
-xplr_cmd        = "xplr",
-vifm_cmd        = "vifm",
-skim_cmd        = "sk",
-broot_cmd       = "broot",
-gitui_cmd       = "gitui",
-ranger_cmd      = "ranger",
-joshuto_cmd     = "joshuto",
-lazygit_cmd     = "lazygit",
-neomutt_cmd     = "neomutt",
-taskwarrior_cmd = "taskwarrior-tui"
-},
+require('satellite').setup()
 
--- Mappings used with the plugin
-mappings = {
-vert_split = "<C-v>",
-horz_split = "<C-h>",
-tabedit    = "<C-t>",
-edit       = "<C-e>",
-ESC        = "<ESC>"
-},
-
--- Path to broot config
-broot_conf = vim.fn.stdpath("data") .. "/site/pack/packer/start/fm-nvim/assets/broot_conf.hjson"
-}
-]]
---vim.cmd([[ au BufWrite * :Autoformat ]])
---vim.cmd([[ let g:formatdef_latexindent = '"latexindent -m -l localSettings.yaml -"' ]])
---vim.cmd([[ autocmd FileType vim,tex let b:autoformat_autoindent=0 ]])
+vim.keymap.set("n", "gp", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", {noremap=true})

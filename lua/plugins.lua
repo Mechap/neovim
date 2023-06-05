@@ -4,6 +4,8 @@ return require('packer').startup(function()
     use 'wbthomason/packer.nvim'
     use { 'gen740/SmoothCursor.nvim' }
 
+    use 'lewis6991/satellite.nvim'
+
     -- Lua Dev Facility
     use 'folke/neodev.nvim'
     --use "glepnir/dashboard-nvim"
@@ -14,10 +16,28 @@ return require('packer').startup(function()
             require 'alpha'.setup(require 'alpha.themes.dashboard'.config)
         end
     }
-    --use "folke/which-key.nvim"
+
+    use "kevinhwang91/rnvimr"
+
+    use {
+        'rmagatti/goto-preview',
+        config = function()
+            require('goto-preview').setup {}
+        end
+    }
 
     use "ggandor/leap.nvim"
+    use { 'kevinhwang91/nvim-hlslens' }
+    use "yamatsum/nvim-cursorline"
 
+    use {
+        "SmiteshP/nvim-navbuddy",
+        requires = {
+            "neovim/nvim-lspconfig",
+            "SmiteshP/nvim-navic",
+            "MunifTanjim/nui.nvim"
+        }
+    }
     use {
         "SmiteshP/nvim-navic",
         requires = "neovim/nvim-lspconfig"
@@ -65,7 +85,7 @@ return require('packer').startup(function()
     use 'p00f/clangd_extensions.nvim'
     use 'simrat39/rust-tools.nvim'
 
-    use "lukas-reineke/indent-blankline.nvim"
+    --use "lukas-reineke/indent-blankline.nvim"
     -- Icons
     use 'kyazdani42/nvim-web-devicons'
     -- Git

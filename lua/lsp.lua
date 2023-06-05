@@ -1,5 +1,5 @@
 --local capabilities = vim.lsp.protocol.make_client_capabilities()
-local capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local lspconfig = require('lspconfig')
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
@@ -18,15 +18,15 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
 vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
-
 local navic = require("nvim-navic")
+local navbuddy = require("nvim-navbuddy")
 
 local on_attach = function(client, bufnr)
     local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
 
     local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
-    client.server_capabilities.semanticTokensProvider = true
+    --client.server_capabilities.semanticTokensProvider = false
 
     --buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
@@ -74,7 +74,10 @@ local on_attach = function(client, bufnr)
     --[[, false)
   end]]
     --require 'lsp_signature'.setup()
-    require("lsp-format").on_attach(client)
+  
+    --require("lsp-format").on_attach(client)
+
+    navbuddy.attach(client, bufnr)
 
     if client.server_capabilities.documentSymbolProvider then
         navic.attach(client, bufnr)
@@ -87,10 +90,12 @@ require 'lspconfig'.texlab.setup {
     capabilities = capabilities,
 }
 
+--[[
 require 'lspconfig'.ltex.setup {
     on_attach = on_attach,
     capabilities = capabilities,
 }
+]]
 
 -- Cmake help
 require 'lspconfig'.cmake.setup {}
@@ -110,7 +115,7 @@ require 'lspconfig'.ocamllsp.setup {
 require 'lspconfig'.hls.setup {
     on_attach = on_attach,
     capabilities = capabilities,
-    cmd = { "haskell-language-server-wrapper-1.9.0.0", "--lsp" }
+    --cmd = { "haskell-language-server-wrapper-1.9.0.0", "--lsp" }
     --cmd = { "haskell-language-server-9.2.5\~1.9.1.0", "--lsp" }
 }
 
@@ -176,6 +181,8 @@ require('clangd_extensions').setup {
         },
     },
 }
+
+require 'lspconfig'.zls.setup {}
 
 require 'lspconfig'.gopls.setup({
     server = {
@@ -385,7 +392,7 @@ cmp.setup({
         }
     },
     experimental = {
-        ghost_text = true,
+        ghost_text = false,
     },
     formatting = {
         format = function(_, vim_item)
